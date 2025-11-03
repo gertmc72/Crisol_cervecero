@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sesión Cerrada - Crisol del Cervecero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #f4d03f;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(45, 80, 22, 0.3);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        h1 {
+            color: #d4af37;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            border-bottom: 3px solid #4a7c2a;
+            padding-bottom: 15px;
+        }
+        .message {
+            color: #e0e0e0;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .btn-link {
+            display: inline-block;
+            color: #f4d03f;
+            text-decoration: none;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a7c2a 0%, #2d5016 100%);
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+        .btn-link:hover {
+            background: linear-gradient(135deg, #5a8c3a 0%, #3d6026 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+        .btn-link.secondary {
+            background: rgba(74, 124, 42, 0.3);
+        }
+        .btn-link.secondary:hover {
+            background: rgba(74, 124, 42, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-container">
+        <h1>🍺 Crisol del Cervecero</h1>
+        <div class="message">
+            ✅ Has cerrado sesión correctamente.<br>
+            ¡Gracias por visitarnos!
+        </div>
+        <a href="/" class="btn-link">🏠 Volver al Inicio</a>
+        <a href="{% url 'login' %}" class="btn-link secondary">🔐 Iniciar Sesión de Nuevo</a>
+    </div>
+</body>
+</html>
+
+

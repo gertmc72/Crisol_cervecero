@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Cuenta - Crisol del Cervecero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #f4d03f;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .register-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(45, 80, 22, 0.3);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #d4af37;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            border-bottom: 3px solid #4a7c2a;
+            padding-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #4a7c2a;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: #f4d03f;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85em;
+            margin-top: 5px;
+            padding: 8px;
+            background: rgba(255, 107, 107, 0.2);
+            border-radius: 5px;
+            border-left: 3px solid #ff6b6b;
+        }
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+        }
+        .errorlist li {
+            color: #ff6b6b;
+            font-size: 0.85em;
+            padding: 5px;
+            background: rgba(255, 107, 107, 0.2);
+            border-radius: 3px;
+            margin-bottom: 5px;
+        }
+        .help-text {
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4a7c2a 0%, #2d5016 100%);
+            color: #f4d03f;
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #5a8c3a 0%, #3d6026 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #f4d03f;
+            text-decoration: none;
+            padding: 10px;
+            background: rgba(74, 124, 42, 0.3);
+            border-radius: 5px;
+            border: 1px solid #4a7c2a;
+            transition: all 0.3s;
+        }
+        .back-link:hover {
+            background: rgba(74, 124, 42, 0.5);
+            border-color: #d4af37;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #999;
+            font-size: 0.9em;
+        }
+        .login-link a {
+            color: #d4af37;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .success-message {
+            background: rgba(74, 124, 42, 0.3);
+            border: 1px solid #4a7c2a;
+            color: #f4d03f;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>🍺 Crear Cuenta</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_username">{{ form.username.label }}</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if form.username.help_text %}
+                    <div class="help-text">{{ form.username.help_text }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">{{ form.password1.label }}</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if form.password1.help_text %}
+                    <div class="help-text">{{ form.password1.help_text }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">{{ form.password2.label }}</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if form.password2.help_text %}
+                    <div class="help-text">{{ form.password2.help_text }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-submit">✨ Crear Cuenta</button>
+        </form>
+
+        <div class="login-link">
+            ¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a>
+        </div>
+
+        <a href="/" class="back-link">🏠 Volver al Inicio</a>
+    </div>
+</body>
+</html>
+
+

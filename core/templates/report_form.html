@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reportar contenido - Crisol del Cervecero</title>
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #f4d03f;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(45, 80, 22, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #d4af37;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            border-bottom: 3px solid #4a7c2a;
+            padding-bottom: 15px;
+        }
+        .report-form {
+            background: rgba(26, 26, 26, 0.6);
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #4a7c2a;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #d4af37;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #4a7c2a;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: #f4d03f;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .btn-submit {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a7c2a 0%, #2d5016 100%);
+            color: #f4d03f;
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #5a8c3a 0%, #3d6026 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+        .nav-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #f4d03f;
+            text-decoration: none;
+            padding: 8px 15px;
+            background: rgba(74, 124, 42, 0.5);
+            border-radius: 5px;
+            border: 1px solid #4a7c2a;
+            transition: all 0.3s;
+        }
+        .nav-link:hover {
+            background: rgba(74, 124, 42, 0.8);
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚠️ Reportar contenido</h1>
+    <div class="report-form">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Tipo de contenido</label>
+          {{ form.object_type }}
+        </div>
+        <div class="form-group">
+          <label>ID del objeto</label>
+          {{ form.object_id }}
+        </div>
+        <div class="form-group">
+          <label>Tu nombre</label>
+          {{ form.user_name }}
+        </div>
+        <div class="form-group">
+          <label>Motivo del reporte</label>
+          {{ form.reason }}
+        </div>
+        <button type="submit" class="btn-submit">📤 Enviar reporte</button>
+      </form>
+    </div>
+    <a href="{% url 'moderation_list' %}" class="nav-link">🔧 Ir a moderación</a>
+  </div>
+</body>
+</html>

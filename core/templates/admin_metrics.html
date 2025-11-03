@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Métricas - Crisol del Cervecero</title>
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #f4d03f;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(45, 80, 22, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #d4af37;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            border-bottom: 3px solid #4a7c2a;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #d4af37;
+            margin: 30px 0 20px 0;
+            font-size: 1.8em;
+            border-bottom: 2px solid #4a7c2a;
+            padding-bottom: 10px;
+        }
+        .totals-section {
+            background: rgba(26, 26, 26, 0.6);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #d4af37;
+        }
+        .totals-list {
+            list-style: none;
+        }
+        .totals-list li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(45, 80, 22, 0.3);
+            border-radius: 8px;
+            font-size: 1.2em;
+            border-left: 3px solid #4a7c2a;
+        }
+        .totals-list li strong {
+            color: #d4af37;
+        }
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26, 26, 26, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .metrics-table thead {
+            background: rgba(74, 124, 42, 0.5);
+        }
+        .metrics-table th {
+            padding: 15px;
+            text-align: left;
+            color: #d4af37;
+            font-weight: bold;
+            border-bottom: 2px solid #4a7c2a;
+        }
+        .metrics-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(74, 124, 42, 0.3);
+            color: #e0e0e0;
+        }
+        .metrics-table tbody tr:hover {
+            background: rgba(45, 80, 22, 0.3);
+        }
+        .metrics-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .rating-cell {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .empty-message {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 40px;
+        }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Panel de métricas</h1>
+    
+    <div class="totals-section">
+      <h2>📈 Totales</h2>
+      <ul class="totals-list">
+        <li><strong>Reseñas:</strong> {{ totals.reviews }}</li>
+        <li><strong>Hilos:</strong> {{ totals.threads }}</li>
+        <li><strong>Mensajes:</strong> {{ totals.posts }}</li>
+      </ul>
+    </div>
+
+    <h2>🏆 Top 5 Cervezas por Calificación</h2>
+    <table class="metrics-table">
+      <thead>
+        <tr>
+          <th>Cerveza</th>
+          <th>Estilo</th>
+          <th>Calificación promedio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in top5 %}
+          <tr>
+            <td>{{ b.name }}</td>
+            <td>{{ b.style }}</td>
+            <td class="rating-cell">⭐ {{ b.avg_rating }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3" class="empty-message">Sin datos suficientes.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
