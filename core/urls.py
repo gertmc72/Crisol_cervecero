@@ -10,9 +10,14 @@ urlpatterns = [
     # Ruta para crear reseña sin elegir una cerveza preexistente (entrada libre)
     path("beers/review/create/", views.create_review, name="create_review_free"),
 
+    path("reviews/<int:review_id>/delete/",
+         views.review_delete, name="review_delete"),
+
     path("threads/", views.threads_list_create, name="threads_list"),
     path("threads/<int:thread_id>/",
          views.thread_detail_reply, name="thread_detail"),
+    path("threads/<int:thread_id>/delete/",
+         views.thread_delete, name="thread_delete"),
 
     path("signup/", views.signup_view, name="signup"),
     path("login/", views.login_view, name="login"),

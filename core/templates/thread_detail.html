@@ -6,70 +6,81 @@
 <div style="margin-bottom: 20px;">
     <a href="{% url 'threads_list' %}" style="color: #666; text-decoration: none;">← Volver a hilos</a>
     {% if thread.beer %}
-        <span style="color: #999;"> • </span>
-        <a href="{% url 'beer_detail' thread.beer.id %}" style="color: #666; text-decoration: none;">{{ thread.beer.name }}</a>
+    <span style="color: #999;"> • </span>
+    <a href="{% url 'beer_detail' thread.beer.id %}" style="color: #666; text-decoration: none;">{{ thread.beer.name
+        }}</a>
     {% endif %}
 </div>
 
 <div class="card" style="margin-bottom: 20px;">
     <h2>{{ thread.title }}</h2>
     <p class="card-meta">
-        por {{ thread.user_name }} • 
+        por {{ thread.user_name }} •
         {% if thread.beer %}
-            <a href="{% url 'beer_detail' thread.beer.id %}">{{ thread.beer.name }}</a> • 
+        <a href="{% url 'beer_detail' thread.beer.id %}">{{ thread.beer.name }}</a> •
         {% else %}
-            Hilo general • 
+        Hilo general •
         {% endif %}
         {{ thread.created_at|date:"d/m/Y H:i" }}
     </p>
+    {% if user.is_authenticated and (user.is_staff or (thread.user and user == thread.user) or user.username ==
+    thread.user_name) %}
+    <div style="margin-top:10px;">
+        <form method="post" action="{% url 'thread_delete' thread.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background-color:#c82333; border-color:#bd2130;">Eliminar
+                hilo</button>
+        </form>
+    </div>
+    {% endif %}
 </div>
 
 <h3>Respuestas ({{ page_obj.paginator.count }})</h3>
 
 {% if page_obj %}
-    {% for post in page_obj %}
-        <div class="card" style="margin-top: 10px;">
-            {% if post.is_hidden %}
-                <p style="color: #999; font-style: italic;">(oculto por moderación)</p>
-            {% else %}
-                <p style="white-space: pre-wrap;">{{ post.body }}</p>
-                <p class="card-meta">
-                    por {{ post.user_name }} • {{ post.created_at|date:"d/m/Y H:i" }}
-                </p>
-            {% endif %}
-        </div>
-    {% endfor %}
+{% for post in page_obj %}
+<div class="card" style="margin-top: 10px;">
+    {% if post.is_hidden %}
+    <p style="color: #999; font-style: italic;">(oculto por moderación)</p>
+    {% else %}
+    <p style="white-space: pre-wrap;">{{ post.body }}</p>
+    <p class="card-meta">
+        por {{ post.user_name }} • {{ post.created_at|date:"d/m/Y H:i" }}
+    </p>
+    {% endif %}
+</div>
+{% endfor %}
 
-    <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">← Anterior</a>
-        {% endif %}
-        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente →</a>
-        {% endif %}
-    </div>
+<div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">← Anterior</a>
+    {% endif %}
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente →</a>
+    {% endif %}
+</div>
 {% else %}
-    <p>No hay respuestas aún.</p>
+<p>No hay respuestas aún.</p>
 {% endif %}
 
 {% if user.is_authenticated %}
-    <div style="margin-top: 30px; padding: 15px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
-        <h3>Responder</h3>
-        <form method="post" style="margin-top: 10px;">
-            {% csrf_token %}
-            <div style="margin-bottom: 10px;">
-                {{ form.body }}
-                {% if form.body.errors %}
-                    <div style="color: red; font-size: 12px;">{{ form.body.errors }}</div>
-                {% endif %}
-            </div>
-            <button type="submit" class="btn">Publicar respuesta</button>
-        </form>
-    </div>
+<div style="margin-top: 30px; padding: 15px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+    <h3>Responder</h3>
+    <form method="post" style="margin-top: 10px;">
+        {% csrf_token %}
+        <div style="margin-bottom: 10px;">
+            {{ form.body }}
+            {% if form.body.errors %}
+            <div style="color: red; font-size: 12px;">{{ form.body.errors }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn">Publicar respuesta</button>
+    </form>
+</div>
 {% else %}
-    <div style="margin-top: 30px; padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
-        <p>💡 <a href="{% url 'login' %}?next={{ request.path }}">Inicia sesión</a> para responder.</p>
-    </div>
+<div style="margin-top: 30px; padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
+    <p>💡 <a href="{% url 'login' %}?next={{ request.path }}">Inicia sesión</a> para responder.</p>
+</div>
 {% endif %}
 {% endblock %}

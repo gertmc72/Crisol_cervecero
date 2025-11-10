@@ -18,49 +18,63 @@
 
 <div style="margin-bottom: 20px;">
     {% if user.is_authenticated %}
-        <a href="{% url 'create_review' beer.id %}" class="btn">✍️ Crear Reseña</a>
-        <a href="{% url 'threads_list' %}" class="btn btn-secondary" style="margin-left: 10px;">💬 Ver hilos ({{ threads_count }})</a>
+    <a href="{% url 'create_review' beer.id %}" class="btn">✍️ Crear Reseña</a>
+    <a href="{% url 'threads_list' %}" class="btn btn-secondary" style="margin-left: 10px;">💬 Ver hilos ({{
+        threads_count }})</a>
     {% else %}
-        <p style="padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
-            💡 <a href="{% url 'login' %}?next={{ request.path }}">Inicia sesión</a> para crear una reseña o participar en los hilos.
-        </p>
+    <p style="padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
+        💡 <a href="{% url 'login' %}?next={{ request.path }}">Inicia sesión</a> para crear una reseña o participar en
+        los hilos.
+    </p>
     {% endif %}
 </div>
 
 <h2>📝 Reseñas</h2>
 
 {% if reviews %}
-    {% for r in reviews %}
-        <div class="card" style="margin-top: 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <span style="font-weight: bold;">{{ r.user_name }}</span>
-                <span style="color: #999; font-size: 12px;">{{ r.created_at|date:"d/m/Y H:i" }}</span>
-            </div>
-            {% if r.brand or r.brewery_name %}
-                <div style="margin-bottom: 8px; font-size: 14px; color: #666;">
-                    {% if r.brand %}
-                        <strong>Marca:</strong> {{ r.brand }}
-                    {% endif %}
-                    {% if r.brewery_name %}
-                        {% if r.brand %} • {% endif %}
-                        <strong>Cervecería:</strong> {{ r.brewery_name }}
-                    {% endif %}
-                </div>
-            {% endif %}
-            <div style="white-space: pre-wrap; margin-bottom: 10px;">{{ r.comment|linebreaksbr }}</div>
-            {% if r.photos_list %}
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
-                    {% for photo in r.photos_list %}
-                        <img src="{{ photo.photo.url }}" alt="Foto de reseña" style="max-width: 200px; max-height: 200px; border-radius: 4px; border: 1px solid #e0e0e0; cursor: pointer;" onclick="window.open(this.src, '_blank')">
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <div style="margin-top: 10px; font-size: 12px; color: #999;">
-                <strong>Calificaciones:</strong> Aroma: {{ r.aroma }}/5 • Sabor: {{ r.sabor }}/5 • Cuerpo: {{ r.cuerpo }}/5 • Apariencia: {{ r.apariencia }}/5
-            </div>
-        </div>
-    {% endfor %}
+{% for r in reviews %}
+<div class="card" style="margin-top: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-weight: bold;">{{ r.user_name }}</span>
+        <span style="color: #999; font-size: 12px;">{{ r.created_at|date:"d/m/Y H:i" }}</span>
+    </div>
+    {% if r.brand or r.brewery_name %}
+    <div style="margin-bottom: 8px; font-size: 14px; color: #666;">
+        {% if r.brand %}
+        <strong>Marca:</strong> {{ r.brand }}
+        {% endif %}
+        {% if r.brewery_name %}
+        {% if r.brand %} • {% endif %}
+        <strong>Cervecería:</strong> {{ r.brewery_name }}
+        {% endif %}
+    </div>
+    {% endif %}
+    <div style="white-space: pre-wrap; margin-bottom: 10px;">{{ r.comment|linebreaksbr }}</div>
+    {% if r.photos_list %}
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+        {% for photo in r.photos_list %}
+        <img src="{{ photo.photo.url }}" alt="Foto de reseña"
+            style="max-width: 200px; max-height: 200px; border-radius: 4px; border: 1px solid #e0e0e0; cursor: pointer;"
+            onclick="window.open(this.src, '_blank')">
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div style="margin-top: 10px; font-size: 12px; color: #999;">
+        <strong>Calificaciones:</strong> Aroma: {{ r.aroma }}/5 • Sabor: {{ r.sabor }}/5 • Cuerpo: {{ r.cuerpo }}/5 •
+        Apariencia: {{ r.apariencia }}/5
+    </div>
+    {% if user.is_authenticated and (user.is_staff or user.username == r.user_name) %}
+    <div style="margin-top:8px;">
+        <form method="post" action="{% url 'review_delete' r.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background-color:#c82333; border-color:#bd2130;">Eliminar
+                reseña</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
 {% else %}
-    <p style="margin-top: 20px; color: #999; font-style: italic;">Sin reseñas aún.</p>
+<p style="margin-top: 20px; color: #999; font-style: italic;">Sin reseñas aún.</p>
 {% endif %}
 {% endblock %}

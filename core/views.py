@@ -243,6 +243,56 @@ def thread_detail_reply(request, thread_id):
     })
 
 
+@login_required
+def thread_delete(request, thread_id):
+    """Eliminar un hilo. Solo el autor del hilo o staff pueden eliminarlo."""
+    thread = get_object_or_404(Thread, id=thread_id)
+    # Permiso: autor (thread.user) o staff
+    allowed = False
+    if request.user.is_staff:
+        allowed = True
+    elif thread.user and request.user == thread.user:
+        allowed = True
+    elif request.user.username == thread.user_name:
+        # fallback si thread.user es None pero el nombre coincide
+        allowed = True
+
+    if not allowed:
+        messages.error(request, "No tienes permiso para eliminar este hilo.")
+        return redirect("thread_detail", thread_id=thread.id)
+
+    if request.method == "POST":
+        thread.delete()
+        messages.success(request, "Hilo eliminado correctamente.")
+        return redirect("threads_list")
+
+    # En caso de GET, mostrar confirmación simple
+    return render(request, "confirm_delete.html", {"object_type": "hilo", "object": thread})
+
+
+@login_required
+def review_delete(request, review_id):
+    """Eliminar una reseña. Autor (por user_name) o staff pueden eliminarla."""
+    review = get_object_or_404(Review, id=review_id)
+    allowed = False
+    if request.user.is_staff:
+        allowed = True
+    elif request.user.username == review.user_name:
+        allowed = True
+
+    if not allowed:
+        messages.error(request, "No tienes permiso para eliminar esta reseña.")
+        return redirect("beer_detail", beer_id=review.beer.id)
+
+    if request.method == "POST":
+        beer_id = review.beer.id
+        review.delete()
+        messages.success(request, "Reseña eliminada correctamente.")
+        return redirect("beer_detail", beer_id=beer_id)
+
+    return render(request, "confirm_delete.html", {"object_type": "reseña", "object": review})
+
+
 def report_create(request, object_type, object_id):
     if request.method == "POST":
         form = ReportForm(request.POST)

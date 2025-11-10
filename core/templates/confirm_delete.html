@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmar eliminación - Crisol Cervecero{% endblock %}
+
+{% block content %}
+<h1>Confirmar eliminación</h1>
+
+<div class="card">
+    <p>¿Estás seguro que quieres eliminar esta {{ object_type }}?</p>
+    <p><strong>{{ object }}</strong></p>
+    <form method="post" style="margin-top: 15px;">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="background-color: #c82333; border-color: #bd2130;">Eliminar</button>
+        <a href="javascript:history.back()" class="btn btn-secondary" style="margin-left: 10px;">Cancelar</a>
+    </form>
+</div>
+
+{% endblock %}
