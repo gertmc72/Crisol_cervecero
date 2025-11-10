@@ -24,7 +24,23 @@
         {{ thread.created_at|date:"d/m/Y H:i" }}
     </p>
     {% if user.is_authenticated %}
-    {% if user.is_staff or (thread.user and user == thread.user) or user.username == thread.user_name %}
+    {% if user.is_staff %}
+    <div style="margin-top:10px;">
+        <form method="post" action="{% url 'thread_delete' thread.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background-color:#c82333; border-color:#bd2130;">Eliminar
+                hilo</button>
+        </form>
+    </div>
+    {% elif thread.user and user == thread.user %}
+    <div style="margin-top:10px;">
+        <form method="post" action="{% url 'thread_delete' thread.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background-color:#c82333; border-color:#bd2130;">Eliminar
+                hilo</button>
+        </form>
+    </div>
+    {% elif user.username == thread.user_name %}
     <div style="margin-top:10px;">
         <form method="post" action="{% url 'thread_delete' thread.id %}">
             {% csrf_token %}
