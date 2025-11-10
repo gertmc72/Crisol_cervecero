@@ -393,22 +393,15 @@
         <aside class="sidebar">
             {% block sidebar_right %}
             <h3>Acciones</h3>
-            <li>
-                {% if user.is_authenticated %}
-                <a href="{% url 'create_review_free' %}">⭐ Crear reseña</a>
-                {% else %}
-                <a href="{% url 'login' %}" class="disabled" title="Inicia sesión para participar">⭐ Crear reseña</a>
-                {% endif %}
-            </li>
-            </li>
-            <li>
-                {% if user.is_authenticated %}
-                <a href="{% url 'beer_list' %}">⭐ Crear reseña</a>
-                {% else %}
-                <a href="{% url 'login' %}" class="disabled" title="Inicia sesión para participar">⭐ Crear
-                    reseña</a>
-                {% endif %}
-            </li>
+            <ul>
+                <li>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'beer_list' %}">⭐ Crear reseña</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="disabled" title="Inicia sesión para participar">⭐ Crear
+                        reseña</a>
+                    {% endif %}
+                </li>
             </ul>
             {% endblock %}
         </aside>
