@@ -23,8 +23,8 @@
         {% endif %}
         {{ thread.created_at|date:"d/m/Y H:i" }}
     </p>
-    {% if user.is_authenticated and (user.is_staff or (thread.user and user == thread.user) or user.username ==
-    thread.user_name) %}
+    {% if user.is_authenticated %}
+    {% if user.is_staff or (thread.user and user == thread.user) or user.username == thread.user_name %}
     <div style="margin-top:10px;">
         <form method="post" action="{% url 'thread_delete' thread.id %}">
             {% csrf_token %}
@@ -32,6 +32,7 @@
                 hilo</button>
         </form>
     </div>
+    {% endif %}
     {% endif %}
 </div>
 
