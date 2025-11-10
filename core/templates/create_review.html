@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if beer %}
+Crear Reseña - {{ beer.name }} - Crisol Cervecero
+{% else %}
+Crear Reseña - Crisol Cervecero
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'beer_detail' beer.id %}" style="color: #666; text-decoration: none;">← Volver a {{ beer.name }}</a>
+</div>
+
+<h1>✍️ Crear Reseña</h1>
+
+<div class="card" style="margin-bottom: 20px;">
+    {% if beer %}
+    <p><strong>🍺 Cerveza:</strong> {{ beer.name }}</p>
+    <p><strong>🏭 Cervecería:</strong> {{ beer.brewery.name }}</p>
+    <p><strong>🍻 Estilo:</strong> {{ beer.style }}</p>
+    {% else %}
+    <p>Introduce el nombre de la cerveza y el estilo en el formulario para crear una reseña libre.</p>
+    {% endif %}
+</div>
+
+<form method="post" enctype="multipart/form-data"
+    style="padding: 20px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div style="color: red; margin-bottom: 15px;">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <div style="margin-bottom: 15px;">
+        {% if not beer %}
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.beer_name.id_for_label }}">{{ form.beer_name.label }}</label>
+            {{ form.beer_name }}
+            {% if form.beer_name.errors %}
+            <div style="color: red; font-size: 12px;">{{ form.beer_name.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.style.id_for_label }}">{{ form.style.label }}</label>
+            {{ form.style }}
+            {% if form.style.errors %}
+            <div style="color: red; font-size: 12px;">{{ form.style.errors }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <label for="{{ form.user_name.id_for_label }}">{{ form.user_name.label }}</label>
+        {{ form.user_name }}
+        {% if form.user_name.errors %}
+        <div style="color: red; font-size: 12px;">{{ form.user_name.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.brand.id_for_label }}">{{ form.brand.label }}</label>
+        {{ form.brand }}
+        {% if form.brand.errors %}
+        <div style="color: red; font-size: 12px;">{{ form.brand.errors }}</div>
+        {% endif %}
+        <div style="font-size: 12px; color: #666; margin-top: 5px;">Opcional: Marca de la cerveza</div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.brewery_name.id_for_label }}">{{ form.brewery_name.label }}</label>
+        {{ form.brewery_name }}
+        {% if form.brewery_name.errors %}
+        <div style="color: red; font-size: 12px;">{{ form.brewery_name.errors }}</div>
+        {% endif %}
+        <div style="font-size: 12px; color: #666; margin-top: 5px;">Opcional: Nombre de la cervecería productora</div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label for="{{ form.comment.id_for_label }}">{{ form.comment.label }}</label>
+        {{ form.comment }}
+        <div id="word-count" style="color: #666; font-size: 12px; margin-top: 5px;">0 palabras</div>
+        {% if form.comment.errors %}
+        <div style="color: red; font-size: 12px;">{{ form.comment.errors }}</div>
+        {% endif %}
+        <div style="font-size: 12px; color: #666; margin-top: 5px;">{{ form.comment.help_text }}</div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label>Calificaciones (1-5)</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px;">
+            <div>
+                <label for="{{ form.aroma.id_for_label }}">{{ form.aroma.label }}</label>
+                {{ form.aroma }}
+                {% if form.aroma.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.aroma.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ form.sabor.id_for_label }}">{{ form.sabor.label }}</label>
+                {{ form.sabor }}
+                {% if form.sabor.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.sabor.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ form.cuerpo.id_for_label }}">{{ form.cuerpo.label }}</label>
+                {{ form.cuerpo }}
+                {% if form.cuerpo.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.cuerpo.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ form.apariencia.id_for_label }}">{{ form.apariencia.label }}</label>
+                {{ form.apariencia }}
+                {% if form.apariencia.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.apariencia.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label>Fotos (máximo 3)</label>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+            <div>
+                <label for="{{ form.photo1.id_for_label }}">{{ form.photo1.label }}</label>
+                {{ form.photo1 }}
+                {% if form.photo1.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.photo1.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ form.photo2.id_for_label }}">{{ form.photo2.label }}</label>
+                {{ form.photo2 }}
+                {% if form.photo2.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.photo2.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ form.photo3.id_for_label }}">{{ form.photo3.label }}</label>
+                {{ form.photo3 }}
+                {% if form.photo3.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.photo3.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div style="font-size: 12px; color: #666; margin-top: 5px;">Puedes subir hasta 3 fotos de la lata/botella de la
+            cerveza</div>
+    </div>
+
+    <button type="submit" class="btn">📝 Crear Reseña</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const commentTextarea = document.querySelector('textarea[name="comment"]');
+        const wordCountDisplay = document.getElementById('word-count');
+        const maxWords = 300;
+
+        if (commentTextarea && wordCountDisplay) {
+            function updateWordCount() {
+                const text = commentTextarea.value.trim();
+                const words = text === '' ? 0 : text.split(/\s+/).filter(word => word.length > 0).length;
+                wordCountDisplay.textContent = `${words} palabras`;
+
+                if (words > maxWords) {
+                    wordCountDisplay.style.color = '#ff4500';
+                    wordCountDisplay.textContent = `${words} palabras (máximo ${maxWords})`;
+                } else {
+                    wordCountDisplay.style.color = '#666';
+                }
+            }
+
+            commentTextarea.addEventListener('input', updateWordCount);
+            commentTextarea.addEventListener('paste', function () {
+                setTimeout(updateWordCount, 10);
+            });
+            updateWordCount();
+        }
+    });
+</script>
+{% endblock %}

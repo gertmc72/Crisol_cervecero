@@ -2,6 +2,7 @@ from django.db.models import Avg
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Brewery(models.Model):
@@ -33,10 +34,30 @@ class Review(models.Model):
     cuerpo = models.PositiveSmallIntegerField()
     apariencia = models.PositiveSmallIntegerField()
     comment = models.TextField()
+    brand = models.CharField(max_length=120, blank=True, verbose_name="Marca")
+    brewery_name = models.CharField(
+        max_length=120, blank=True, verbose_name="Cervecería Productora")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Reseña de {self.user_name} para {self.beer.name}"
+
+    def word_count(self):
+        """Cuenta las palabras en el comentario"""
+        return len(self.comment.split())
+
+
+class ReviewPhoto(models.Model):
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE, related_name="photos")
+    photo = models.ImageField(upload_to='review_photos/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Foto de reseña {self.review.id}"
+
+    class Meta:
+        ordering = ['created_at']
 
 
 @receiver([post_save, post_delete], sender=Review)
@@ -51,17 +72,33 @@ def update_beer_avg_rating(sender, instance, **kwargs):
 
 
 class Thread(models.Model):
-    beer = models.ForeignKey(Beer, on_delete=models.CASCADE, related_name="threads")
+    beer = models.ForeignKey(
+        Beer, on_delete=models.CASCADE, related_name="threads", null=True, blank=True)
+    # Nuevo campo para permitir que el autor escriba el nombre de la cerveza libremente
+    beer_name = models.CharField(max_length=120, blank=True, default="")
     title = models.CharField(max_length=140)
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="threads")
     user_name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.title} — {self.beer.name}"
+        # Preferir el campo libre `beer_name` si el autor lo proporcionó
+        if self.beer_name:
+            display = self.beer_name
+        else:
+            display = self.beer.name if self.beer else "General"
+        return f"{self.title} — {display}"
+
+    class Meta:
+        ordering = ['-created_at']
 
 
 class Post(models.Model):
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE, related_name="posts")
+    thread = models.ForeignKey(
+        Thread, on_delete=models.CASCADE, related_name="posts")
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="posts")
     user_name = models.CharField(max_length=100)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -69,6 +106,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f"Post de {self.user_name} en {self.thread.title}"
+
+    class Meta:
+        ordering = ['created_at']
 
 
 class Report(models.Model):
@@ -85,7 +125,8 @@ class Report(models.Model):
     object_id = models.PositiveIntegerField()
     user_name = models.CharField(max_length=100)
     reason = models.CharField(max_length=200)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="open")
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default="open")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar sesión - Crisol Cervecero{% endblock %}
+
+{% block content %}
+<h1>Iniciar sesión</h1>
+
+<div style="max-width: 400px; margin-top: 20px;">
+    <form method="post" style="padding: 20px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+        {% csrf_token %}
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div style="color: red; font-size: 12px;">{{ form.password.errors }}</div>
+            {% endif %}
+        </div>
+        {% if form.non_field_errors %}
+            <div style="color: red; font-size: 12px; margin-bottom: 15px;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        <button type="submit" class="btn" style="width: 100%;">Iniciar sesión</button>
+    </form>
+    <p style="margin-top: 15px; text-align: center;">
+        ¿No tienes cuenta? <a href="{% url 'signup' %}">Regístrate aquí</a>
+    </p>
+</div>
+{% endblock %}
+
+

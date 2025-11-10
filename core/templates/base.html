@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Crisol Cervecero{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding-top: 60px;
+        }
+
+        /* Header fijo estilo Reddit */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4500;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            text-decoration: underline;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: #1a1a1a;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-links a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .header-center {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+
+        .search-form {
+            display: flex;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            padding: 8px 16px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: #e03d00;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-links a {
+            color: #1a1a1a;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .auth-links a:hover {
+            background-color: #f0f0f0;
+            border-color: #999;
+        }
+
+        .auth-links .login-btn {
+            background-color: #ff4500;
+            color: white;
+            border-color: #ff4500;
+        }
+
+        .auth-links .login-btn:hover {
+            background-color: #e03d00;
+            border-color: #e03d00;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .username {
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar a {
+            color: #1a1a1a;
+            text-decoration: none;
+            display: block;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sidebar a.disabled {
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .sidebar a.disabled:hover {
+            background-color: transparent;
+        }
+
+        /* Mensajes */
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .messages li {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            list-style: none;
+        }
+
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .messages .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .messages .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Botones */
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #e03d00;
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Cards */
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .card-meta {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Formularios */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .header-center {
+                display: none;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <a href="{% url 'home' %}" class="logo">🍺 Crisol Cervecero</a>
+            <nav class="nav-links">
+                <a href="{% url 'home' %}">Inicio</a>
+                <a href="{% url 'beer_list' %}">Cervezas</a>
+                <a href="{% url 'threads_list' %}">Hilos</a>
+            </nav>
+        </div>
+        <div class="header-center">
+            <form method="get" action="{% url 'home' %}" class="search-form">
+                <input type="text" name="q" placeholder="Buscar..." class="search-input" value="{{ request.GET.q }}">
+                <button type="submit" class="search-btn">🔍</button>
+            </form>
+        </div>
+        <div class="header-right">
+            {% if user.is_authenticated %}
+            <div class="user-info">
+                <span class="username">{{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="auth-links">Cerrar sesión</a>
+            </div>
+            {% else %}
+            <div class="auth-links">
+                <a href="{% url 'signup' %}">Registrarse</a>
+                <a href="{% url 'login' %}?next={{ request.path }}" class="login-btn">Iniciar sesión</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="main-container">
+        <main class="main-content">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+        <aside class="sidebar">
+            {% block sidebar_right %}
+            <h3>Acciones</h3>
+            <li>
+                {% if user.is_authenticated %}
+                <a href="{% url 'create_review_free' %}">⭐ Crear reseña</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="disabled" title="Inicia sesión para participar">⭐ Crear reseña</a>
+                {% endif %}
+            </li>
+            </li>
+            <li>
+                {% if user.is_authenticated %}
+                <a href="{% url 'beer_list' %}">⭐ Crear reseña</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="disabled" title="Inicia sesión para participar">⭐ Crear
+                    reseña</a>
+                {% endif %}
+            </li>
+            </ul>
+            {% endblock %}
+        </aside>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

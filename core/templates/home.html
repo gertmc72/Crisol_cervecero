@@ -1,153 +1,50 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Crisol del Cervecero</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: #f4d03f;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(45, 80, 22, 0.3);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #d4af37;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-        h1 {
-            color: #d4af37;
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            border-bottom: 3px solid #4a7c2a;
-            padding-bottom: 15px;
-        }
-        .filters {
-            background: rgba(26, 26, 26, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border: 1px solid #4a7c2a;
-        }
-        .filters form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-        .filters input, .filters select {
-            padding: 10px;
-            border: 2px solid #4a7c2a;
-            border-radius: 5px;
-            background: #1a1a1a;
-            color: #f4d03f;
-            font-size: 14px;
-        }
-        .filters input:focus, .filters select:focus {
-            outline: none;
-            border-color: #d4af37;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-        }
-        .filters button {
-            padding: 10px 25px;
-            background: linear-gradient(135deg, #4a7c2a 0%, #2d5016 100%);
-            color: #f4d03f;
-            border: 2px solid #d4af37;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .filters button:hover {
-            background: linear-gradient(135deg, #5a8c3a 0%, #3d6026 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
-        }
-        .beer-list {
-            list-style: none;
-        }
-        .beer-list li {
-            margin-bottom: 15px;
-            background: rgba(26, 26, 26, 0.6);
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #d4af37;
-            transition: all 0.3s;
-        }
-        .beer-list li:hover {
-            background: rgba(45, 80, 22, 0.4);
-            transform: translateX(5px);
-            border-left-color: #f4d03f;
-        }
-        .beer-list a {
-            color: #f4d03f;
-            text-decoration: none;
-            font-size: 1.1em;
-            font-weight: 500;
-        }
-        .beer-list a:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-        .empty {
-            text-align: center;
-            color: #999;
-            font-style: italic;
-            padding: 40px;
-        }
-    </style>
-</head>
+{% block title %}Inicio - Crisol Cervecero{% endblock %}
 
-<body>
-    <div class="container">
-        <h1>🍺 Crisol del Cervecero 🍺</h1>
+{% block content %}
+<h1>Bienvenido a Crisol Cervecero</h1>
 
-        <div class="filters">
-            <form method="get">
-                <input type="text" name="q" placeholder="Buscar por nombre" value="{{ q }}">
-                <select name="style">
-                    <option value="">-- Estilo --</option>
-                    {% for s in styles %}
-                        <option value="{{ s }}" {% if style == s %}selected{% endif %}>{{ s }}</option>
-                    {% endfor %}
-                </select>
-                <select name="brewery">
-                    <option value="">-- Cervecería --</option>
-                    {% for b in breweries %}
-                        <option value="{{ b.id }}" {% if brewery|default:'' == b.id|stringformat:'s' %}selected{% endif %}>{{ b.name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="number" step="0.01" min="0" max="5" name="min_rating" placeholder="Calificación mínima" value="{{ min_rating }}">
-                <button type="submit">🔍 Filtrar</button>
-            </form>
-        </div>
+<div style="margin-top: 20px;">
+    <h2>Hilos Recientes</h2>
+    {% if threads %}
+        {% for thread in threads %}
+            <div class="card">
+                <h3><a href="{% url 'thread_detail' thread.id %}" style="color: #1a1a1a; text-decoration: none;">{{ thread.title }}</a></h3>
+                <p class="card-meta">
+                    por {{ thread.user_name }} • 
+                    {% if thread.beer %}
+                        <a href="{% url 'beer_detail' thread.beer.id %}">{{ thread.beer.name }}</a> • 
+                    {% else %}
+                        Hilo general • 
+                    {% endif %}
+                    {{ thread.created_at|date:"d/m/Y H:i" }}
+                </p>
+            </div>
+        {% endfor %}
+        <p style="margin-top: 10px;"><a href="{% url 'threads_list' %}">Ver todos los hilos →</a></p>
+    {% else %}
+        <p>No hay hilos recientes.</p>
+    {% endif %}
+</div>
 
-        <ul class="beer-list">
-            {% for beer in beers %}
-            <li>
-                <a href="{% url 'beer_detail' beer.id %}">
-                    {{ beer.name }} — {{ beer.style }} (⭐ {{ beer.avg_rating }})
-                </a>
-            </li>
-            {% empty %}
-            <li class="empty">No hay cervezas registradas aún.</li>
-            {% endfor %}
-        </ul>
-    </div>
-</body>
-
-</html>
+<div style="margin-top: 30px;">
+    <h2>Cervezas Destacadas</h2>
+    {% if beers %}
+        {% for beer in beers %}
+            <div class="card">
+                <h3><a href="{% url 'beer_detail' beer.id %}" style="color: #1a1a1a; text-decoration: none;">{{ beer.name }}</a></h3>
+                <p>
+                    <strong>Estilo:</strong> {{ beer.style }} • 
+                    <strong>ABV:</strong> {{ beer.abv|default:"N/A" }}% • 
+                    <strong>Rating:</strong> ⭐ {{ beer.avg_rating }}
+                </p>
+                <p class="card-meta">{{ beer.brewery.name }}</p>
+            </div>
+        {% endfor %}
+        <p style="margin-top: 10px;"><a href="{% url 'beer_list' %}">Ver todas las cervezas →</a></p>
+    {% else %}
+        <p>No hay cervezas destacadas.</p>
+    {% endif %}
+</div>
+{% endblock %}

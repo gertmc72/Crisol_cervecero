@@ -1,270 +1,75 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ thread.title }} - Crisol del Cervecero</title>
-  <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: #f4d03f;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(45, 80, 22, 0.3);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #d4af37;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-        h1 {
-            color: #d4af37;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            border-bottom: 3px solid #4a7c2a;
-            padding-bottom: 15px;
-        }
-        .nav-links {
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(26, 26, 26, 0.5);
-            border-radius: 8px;
-        }
-        .nav-links a {
-            color: #f4d03f;
-            text-decoration: none;
-            margin: 0 10px;
-            padding: 8px 15px;
-            background: rgba(74, 124, 42, 0.5);
-            border-radius: 5px;
-            border: 1px solid #4a7c2a;
-            transition: all 0.3s;
-        }
-        .nav-links a:hover {
-            background: rgba(74, 124, 42, 0.8);
-            border-color: #d4af37;
-            transform: translateY(-2px);
-        }
-        h2 {
-            color: #d4af37;
-            margin: 25px 0 15px 0;
-            font-size: 1.8em;
-            border-bottom: 2px solid #4a7c2a;
-            padding-bottom: 10px;
-        }
-        .posts-list {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-        .post-item {
-            background: rgba(26, 26, 26, 0.6);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #4a7c2a;
-            transition: all 0.3s;
-        }
-        .post-item:hover {
-            background: rgba(45, 80, 22, 0.4);
-            border-left-color: #d4af37;
-        }
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .post-user {
-            color: #d4af37;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        .post-date {
-            color: #999;
-            font-size: 0.9em;
-        }
-        .report-link {
-            color: #ff6b6b;
-            text-decoration: none;
-            font-size: 0.9em;
-            padding: 5px 10px;
-            background: rgba(255, 107, 107, 0.2);
-            border-radius: 5px;
-            border: 1px solid #ff6b6b;
-            transition: all 0.3s;
-        }
-        .report-link:hover {
-            background: rgba(255, 107, 107, 0.4);
-        }
-        .post-content {
-            color: #e0e0e0;
-            line-height: 1.6;
-            margin-top: 10px;
-        }
-        .hidden-post {
-            color: #999;
-            font-style: italic;
-        }
-        .pagination {
-            text-align: center;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(26, 26, 26, 0.5);
-            border-radius: 8px;
-        }
-        .pagination a {
-            color: #f4d03f;
-            text-decoration: none;
-            padding: 8px 15px;
-            margin: 0 5px;
-            background: rgba(74, 124, 42, 0.5);
-            border-radius: 5px;
-            border: 1px solid #4a7c2a;
-            transition: all 0.3s;
-        }
-        .pagination a:hover {
-            background: rgba(74, 124, 42, 0.8);
-            border-color: #d4af37;
-        }
-        .pagination span {
-            color: #d4af37;
-            font-weight: bold;
-            margin: 0 10px;
-        }
-        .reply-form {
-            background: rgba(26, 26, 26, 0.6);
-            padding: 25px;
-            border-radius: 10px;
-            border: 2px solid #4a7c2a;
-            margin-top: 30px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            color: #d4af37;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #4a7c2a;
-            border-radius: 5px;
-            background: #1a1a1a;
-            color: #f4d03f;
-            font-size: 14px;
-            font-family: inherit;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #d4af37;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-        }
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        .error-message {
-            color: #ff6b6b;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        .btn-submit {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #4a7c2a 0%, #2d5016 100%);
-            color: #f4d03f;
-            border: 2px solid #d4af37;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        .btn-submit:hover {
-            background: linear-gradient(135deg, #5a8c3a 0%, #3d6026 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
-        }
-        .empty {
-            text-align: center;
-            color: #999;
-            font-style: italic;
-            padding: 40px;
-        }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>💬 {{ thread.title }}</h1>
-    <div class="nav-links">
-      <a href="{% url 'beer_detail' thread.beer.id %}">🍺 {{ thread.beer.name }}</a>
-      <a href="{% url 'threads_list' thread.beer.id %}">📋 Volver a hilos</a>
-    </div>
+{% extends "base.html" %}
 
-    <h2>💭 Respuestas</h2>
-    <ul class="posts-list">
-      {% for post in page_obj.object_list %}
-        <li class="post-item">
-          <div class="post-header">
-            <span class="post-user">{{ post.user_name }}</span>
-            <div>
-              <span class="post-date">{{ post.created_at|date:"d/m/Y H:i" }}</span>
-              <a href="{% url 'report_create' 'post' post.id %}" class="report-link">⚠️ Reportar</a>
-            </div>
-          </div>
-          <div class="post-content">
+{% block title %}{{ thread.title }} - Crisol Cervecero{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'threads_list' %}" style="color: #666; text-decoration: none;">← Volver a hilos</a>
+    {% if thread.beer %}
+        <span style="color: #999;"> • </span>
+        <a href="{% url 'beer_detail' thread.beer.id %}" style="color: #666; text-decoration: none;">{{ thread.beer.name }}</a>
+    {% endif %}
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+    <h2>{{ thread.title }}</h2>
+    <p class="card-meta">
+        por {{ thread.user_name }} • 
+        {% if thread.beer %}
+            <a href="{% url 'beer_detail' thread.beer.id %}">{{ thread.beer.name }}</a> • 
+        {% else %}
+            Hilo general • 
+        {% endif %}
+        {{ thread.created_at|date:"d/m/Y H:i" }}
+    </p>
+</div>
+
+<h3>Respuestas ({{ page_obj.paginator.count }})</h3>
+
+{% if page_obj %}
+    {% for post in page_obj %}
+        <div class="card" style="margin-top: 10px;">
             {% if post.is_hidden %}
-              <em class="hidden-post">(oculto por moderación)</em>
+                <p style="color: #999; font-style: italic;">(oculto por moderación)</p>
             {% else %}
-              {{ post.body|linebreaksbr }}
+                <p style="white-space: pre-wrap;">{{ post.body }}</p>
+                <p class="card-meta">
+                    por {{ post.user_name }} • {{ post.created_at|date:"d/m/Y H:i" }}
+                </p>
             {% endif %}
-          </div>
-        </li>
-      {% empty %}
-        <li class="empty">No hay respuestas aún.</li>
-      {% endfor %}
-    </ul>
-
-    <div class="pagination">
-      {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">⬅️ Anterior</a>
-      {% endif %}
-      <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Siguiente ➡️</a>
-      {% endif %}
-    </div>
-
-    <div class="reply-form">
-      <h2>✍️ Responder</h2>
-      <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-          <label>Tu nombre</label>
-          {{ form.user_name }}
-          {% if form.user_name.errors %}<div class="error-message">{{ form.user_name.errors.0 }}</div>{% endif %}
         </div>
-        <div class="form-group">
-          <label>Mensaje</label>
-          {{ form.body }}
-          {% if form.body.errors %}<div class="error-message">{{ form.body.errors.0 }}</div>{% endif %}
-        </div>
-        <button type="submit" class="btn-submit">📤 Publicar</button>
-      </form>
+    {% endfor %}
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">← Anterior</a>
+        {% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Siguiente →</a>
+        {% endif %}
     </div>
-  </div>
-</body>
-</html>
+{% else %}
+    <p>No hay respuestas aún.</p>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <div style="margin-top: 30px; padding: 15px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+        <h3>Responder</h3>
+        <form method="post" style="margin-top: 10px;">
+            {% csrf_token %}
+            <div style="margin-bottom: 10px;">
+                {{ form.body }}
+                {% if form.body.errors %}
+                    <div style="color: red; font-size: 12px;">{{ form.body.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn">Publicar respuesta</button>
+        </form>
+    </div>
+{% else %}
+    <div style="margin-top: 30px; padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
+        <p>💡 <a href="{% url 'login' %}?next={{ request.path }}">Inicia sesión</a> para responder.</p>
+    </div>
+{% endif %}
+{% endblock %}

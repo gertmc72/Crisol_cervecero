@@ -1,24 +1,67 @@
 :root {
     --cerveza-verde: #2E8B57;
-    /* Verde más intenso */
+    --cerveza-verde-claro: #98FB98;
     --cerveza-negro: #000000;
     --cerveza-blanco: #FFFFFF;
-    --cerveza-verde-claro: #98FB98;
+    --cerveza-verde-transparente: rgba(46, 139, 87, 0.1);
 }
 
+/* Estilos generales */
 body {
     background-color: var(--cerveza-negro);
     color: var(--cerveza-blanco);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    padding-top: 60px;
 }
 
-.navbar {
+/* Header y navegación */
+header {
+    background-color: var(--cerveza-verde) !important;
+    border-bottom: 2px solid var(--cerveza-verde-claro) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.navbar,
+.header-left,
+.header-right {
     background-color: var(--cerveza-verde);
-    border-bottom: 2px solid var(--cerveza-blanco);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: var(--cerveza-blanco);
 }
 
-.container {
-    background-color: rgba(46, 139, 87, 0.1);
+/* Enlaces y navegación */
+.nav-links a,
+.logo,
+.auth-links a {
+    color: var(--cerveza-blanco) !important;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.nav-links a:hover,
+.logo:hover,
+.auth-links a:hover {
+    color: var(--cerveza-verde-claro) !important;
+    background-color: var(--cerveza-negro) !important;
+}
+
+/* Búsqueda */
+.search-input {
+    background-color: var(--cerveza-negro);
+    color: var(--cerveza-blanco);
+    border: 1px solid var(--cerveza-verde-claro);
+}
+
+.search-btn {
+    background-color: var(--cerveza-verde-claro) !important;
+    color: var(--cerveza-negro) !important;
+    border: none !important;
+}
+
+/* Contenedores principales */
+.container,
+.main-container {
+    background-color: var(--cerveza-verde-transparente);
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
@@ -26,60 +69,120 @@ body {
 }
 
 .card {
-    background-color: rgba(46, 139, 87, 0.15);
+    background-color: var(--cerveza-negro);
     border: 2px solid var(--cerveza-verde);
+    color: var(--cerveza-blanco);
 }
 
 .card-header {
     background-color: var(--cerveza-verde);
-    color: var(--cerveza-negro);
+    color: var(--cerveza-blanco);
 }
 
-.btn-primary {
-    background-color: var(--cerveza-verde);
-    border: 2px solid var(--cerveza-verde-claro);
-    color: var(--cerveza-blanco);
+/* Botones */
+.btn,
+.btn-primary,
+.login-btn {
+    background-color: var(--cerveza-verde) !important;
+    border: 2px solid var(--cerveza-verde-claro) !important;
+    color: var(--cerveza-blanco) !important;
     font-weight: bold;
 }
 
-.btn-primary:hover {
-    background-color: var(--cerveza-verde-claro);
-    color: var(--cerveza-negro);
-    border-color: var(--cerveza-verde);
+.btn:hover,
+.btn-primary:hover,
+.login-btn:hover {
+    background-color: var(--cerveza-verde-claro) !important;
+    color: var(--cerveza-negro) !important;
+    border-color: var(--cerveza-verde) !important;
 }
 
-.forum-topic {
-    border-left: 4px solid var(--cerveza-verde);
-    background-color: rgba(46, 139, 87, 0.1);
-}
-
+/* Elementos del foro */
+.forum-topic,
 .forum-post {
     border-left: 4px solid var(--cerveza-verde);
+    background-color: var(--cerveza-negro);
+    border: 1px solid var(--cerveza-verde);
     margin-bottom: 15px;
-    padding: 10px;
-}
-
-.post-content {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
     padding: 15px;
 }
 
+.post-content {
+    background-color: var(--cerveza-verde-transparente);
+    border-radius: 5px;
+    padding: 15px;
+    border: 1px solid var(--cerveza-verde);
+}
+
+/* Enlaces generales */
 a {
-    color: var(--cerveza-verde);
+    color: var(--cerveza-verde-claro);
+    text-decoration: none;
 }
 
 a:hover {
-    color: #a8d3a8;
+    color: var(--cerveza-verde);
+    text-decoration: underline;
 }
 
+/* Sidebar */
+.sidebar {
+    background-color: var(--cerveza-negro) !important;
+    border: 2px solid var(--cerveza-verde) !important;
+    color: var(--cerveza-blanco);
+}
+
+/* Formularios */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+    background-color: var(--cerveza-negro);
+    color: var(--cerveza-blanco);
+    border: 1px solid var(--cerveza-verde);
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+/* Paginación */
 .pagination .page-link {
     background-color: var(--cerveza-negro);
-    color: var(--cerveza-verde);
+    color: var(--cerveza-verde-claro);
     border-color: var(--cerveza-verde);
 }
 
 .pagination .active .page-link {
     background-color: var(--cerveza-verde);
-    color: var(--cerveza-negro);
+    color: var(--cerveza-blanco);
+}
+
+/* Mensajes y alertas */
+.messages .success {
+    background-color: var(--cerveza-verde);
+    color: var(--cerveza-blanco);
+    border: 1px solid var(--cerveza-verde-claro);
+}
+
+.messages .error {
+    background-color: var(--cerveza-negro);
+    color: var(--cerveza-blanco);
+    border: 1px solid #ff0000;
+}
+
+/* Tablas */
+table {
+    background-color: var(--cerveza-negro);
+    color: var(--cerveza-blanco);
+    border: 1px solid var(--cerveza-verde);
+}
+
+th {
+    background-color: var(--cerveza-verde);
+    color: var(--cerveza-blanco);
+}
+
+td {
+    border: 1px solid var(--cerveza-verde-transparente);
 }

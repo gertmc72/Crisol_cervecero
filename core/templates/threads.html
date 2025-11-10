@@ -1,195 +1,73 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Hilos de {{ beer.name }} - Crisol del Cervecero</title>
-  <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: #f4d03f;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(45, 80, 22, 0.3);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid #d4af37;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-        h1 {
-            color: #d4af37;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            border-bottom: 3px solid #4a7c2a;
-            padding-bottom: 15px;
-        }
-        .nav-link {
-            color: #f4d03f;
-            text-decoration: none;
-            padding: 8px 15px;
-            background: rgba(74, 124, 42, 0.5);
-            border-radius: 5px;
-            border: 1px solid #4a7c2a;
-            display: inline-block;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-        }
-        .nav-link:hover {
-            background: rgba(74, 124, 42, 0.8);
-            border-color: #d4af37;
-            transform: translateY(-2px);
-        }
-        .create-form {
-            background: rgba(26, 26, 26, 0.6);
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border: 2px solid #4a7c2a;
-        }
-        .create-form h2 {
-            color: #d4af37;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            color: #d4af37;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #4a7c2a;
-            border-radius: 5px;
-            background: #1a1a1a;
-            color: #f4d03f;
-            font-size: 14px;
-            font-family: inherit;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #d4af37;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-        }
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        .error-message {
-            color: #ff6b6b;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        .btn-submit {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #4a7c2a 0%, #2d5016 100%);
-            color: #f4d03f;
-            border: 2px solid #d4af37;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        .btn-submit:hover {
-            background: linear-gradient(135deg, #5a8c3a 0%, #3d6026 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
-        }
-        h2 {
-            color: #d4af37;
-            margin: 25px 0 15px 0;
-            font-size: 1.8em;
-            border-bottom: 2px solid #4a7c2a;
-            padding-bottom: 10px;
-        }
-        .threads-list {
-            list-style: none;
-        }
-        .thread-item {
-            background: rgba(26, 26, 26, 0.6);
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #d4af37;
-            transition: all 0.3s;
-        }
-        .thread-item:hover {
-            background: rgba(45, 80, 22, 0.4);
-            transform: translateX(5px);
-            border-left-color: #f4d03f;
-        }
-        .thread-item a {
-            color: #f4d03f;
-            text-decoration: none;
-            font-size: 1.2em;
-            font-weight: 500;
-        }
-        .thread-item a:hover {
-            color: #d4af37;
-            text-decoration: underline;
-        }
-        .thread-meta {
-            color: #999;
-            font-size: 0.9em;
-            margin-top: 8px;
-        }
-        .empty {
-            text-align: center;
-            color: #999;
-            font-style: italic;
-            padding: 40px;
-        }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>💬 Hilos de {{ beer.name }}</h1>
-    <a href="{% url 'beer_detail' beer.id %}" class="nav-link">🏠 Volver a la cerveza</a>
+{% extends "base.html" %}
 
-    <div class="create-form">
-      <h2>✨ Crear nuevo hilo</h2>
-      <form method="post">
+{% block title %}Hilos - Crisol Cervecero{% endblock %}
+
+{% block content %}
+<h1>Hilos</h1>
+
+{% if user.is_authenticated %}
+<div
+    style="margin-top: 20px; margin-bottom: 20px; padding: 15px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 4px;">
+    <h2>Crear nuevo hilo</h2>
+    <form method="post" style="margin-top: 10px;">
         {% csrf_token %}
-        <div class="form-group">
-          <label>Título</label>
-          {{ form.title }}
-          {% if form.title.errors %}<div class="error-message">{{ form.title.errors.0 }}</div>{% endif %}
+        <div style="margin-bottom: 10px;">
+            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <div style="color: red; font-size: 12px;">{{ form.title.errors }}</div>
+            {% endif %}
         </div>
-        <div class="form-group">
-          <label>Tu nombre</label>
-          {{ form.user_name }}
-          {% if form.user_name.errors %}<div class="error-message">{{ form.user_name.errors.0 }}</div>{% endif %}
+        <div style="margin-bottom: 10px;">
+            <label for="{{ form.beer_name.id_for_label }}">{{ form.beer_name.label }}</label>
+            {{ form.beer_name }}
+            {% if form.beer_name.errors %}
+            <div style="color: red; font-size: 12px;">{{ form.beer_name.errors }}</div>
+            {% endif %}
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">Deja vacío para un hilo general.</div>
         </div>
-        <button type="submit" class="btn-submit">📝 Crear hilo</button>
-      </form>
-    </div>
+        <button type="submit" class="btn">Crear hilo</button>
+    </form>
+</div>
+{% else %}
+<div
+    style="margin-top: 20px; margin-bottom: 20px; padding: 15px; background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
+    <p>💡 <a href="{% url 'login' %}">Inicia sesión</a> para crear un nuevo hilo.</p>
+</div>
+{% endif %}
 
-    <h2>📋 Listado de hilos</h2>
-    <ul class="threads-list">
-      {% for thread in threads %}
-        <li class="thread-item">
-          <a href="{% url 'thread_detail' thread.id %}">{{ thread.title }}</a>
-          <div class="thread-meta">por {{ thread.user_name }} — {{ thread.created_at|date:"d/m/Y H:i" }}</div>
-        </li>
-      {% empty %}
-        <li class="empty">No hay hilos aún. ¡Crea el primero!</li>
-      {% endfor %}
-    </ul>
-  </div>
-</body>
-</html>
+<div style="margin-top: 20px;">
+    {% if page_obj %}
+    {% for thread in page_obj %}
+    <div class="card">
+        <h3><a href="{% url 'thread_detail' thread.id %}" style="color: #1a1a1a; text-decoration: none;">{{ thread.title
+                }}</a></h3>
+        <p class="card-meta">
+            por {{ thread.user_name }} •
+            {% if thread.beer %}
+            <a href="{% url 'beer_detail' thread.beer.id %}">{{ thread.beer.name }}</a> •
+            {% else %}
+            Hilo general •
+            {% endif %}
+            {{ thread.created_at|date:"d/m/Y H:i" }} •
+            {{ thread.posts.count }} respuesta{{ thread.posts.count|pluralize }}
+        </p>
+    </div>
+    {% endfor %}
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-secondary">←
+            Anterior</a>
+        {% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}"
+            class="btn btn-secondary">Siguiente →</a>
+        {% endif %}
+    </div>
+    {% else %}
+    <p>No hay hilos disponibles.</p>
+    {% endif %}
+</div>
+{% endblock %}
