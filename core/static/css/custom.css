@@ -1,0 +1,85 @@
+:root {
+    --cerveza-verde: #2E8B57;
+    /* Verde más intenso */
+    --cerveza-negro: #000000;
+    --cerveza-blanco: #FFFFFF;
+    --cerveza-verde-claro: #98FB98;
+}
+
+body {
+    background-color: var(--cerveza-negro);
+    color: var(--cerveza-blanco);
+}
+
+.navbar {
+    background-color: var(--cerveza-verde);
+    border-bottom: 2px solid var(--cerveza-blanco);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+    background-color: rgba(46, 139, 87, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid var(--cerveza-verde);
+}
+
+.card {
+    background-color: rgba(46, 139, 87, 0.15);
+    border: 2px solid var(--cerveza-verde);
+}
+
+.card-header {
+    background-color: var(--cerveza-verde);
+    color: var(--cerveza-negro);
+}
+
+.btn-primary {
+    background-color: var(--cerveza-verde);
+    border: 2px solid var(--cerveza-verde-claro);
+    color: var(--cerveza-blanco);
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: var(--cerveza-verde-claro);
+    color: var(--cerveza-negro);
+    border-color: var(--cerveza-verde);
+}
+
+.forum-topic {
+    border-left: 4px solid var(--cerveza-verde);
+    background-color: rgba(46, 139, 87, 0.1);
+}
+
+.forum-post {
+    border-left: 4px solid var(--cerveza-verde);
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+.post-content {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+a {
+    color: var(--cerveza-verde);
+}
+
+a:hover {
+    color: #a8d3a8;
+}
+
+.pagination .page-link {
+    background-color: var(--cerveza-negro);
+    color: var(--cerveza-verde);
+    border-color: var(--cerveza-verde);
+}
+
+.pagination .active .page-link {
+    background-color: var(--cerveza-verde);
+    color: var(--cerveza-negro);
+}
