@@ -10,7 +10,11 @@ Crear Reseña - Crisol Cervecero
 
 {% block content %}
 <div style="margin-bottom: 20px;">
-    <a href="{% url 'beer_detail' beer.id %}" style="color: #666; text-decoration: none;">← Volver a {{ beer.name }}</a>
+    {% if beer %}
+        <a href="{% url 'beer_detail' beer.id %}" style="color: #666; text-decoration: none;">← Volver a {{ beer.name }}</a>
+    {% else %}
+        <a href="{% url 'beer_list' %}" style="color: #666; text-decoration: none;">← Volver a la lista de cervezas</a>
+    {% endif %}
 </div>
 
 <h1>✍️ Crear Reseña</h1>
@@ -36,12 +40,16 @@ Crear Reseña - Crisol Cervecero
     {% endif %}
 
     <div style="margin-bottom: 15px;">
-        {% if not beer %}
         <div style="margin-bottom: 15px;">
             <label for="{{ form.beer_name.id_for_label }}">{{ form.beer_name.label }}</label>
             {{ form.beer_name }}
             {% if form.beer_name.errors %}
             <div style="color: red; font-size: 12px;">{{ form.beer_name.errors }}</div>
+            {% endif %}
+            {% if beer %}
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">Dejar vacío para asociar esta reseña a <strong>{{ beer.name }}</strong>, o escribe otro nombre para crear/usar otra cerveza.</div>
+            {% else %}
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">Escribe el nombre de la cerveza (requerido si no accedes desde la página de una cerveza).</div>
             {% endif %}
         </div>
 
@@ -52,7 +60,6 @@ Crear Reseña - Crisol Cervecero
             <div style="color: red; font-size: 12px;">{{ form.style.errors }}</div>
             {% endif %}
         </div>
-        {% endif %}
 
         <label for="{{ form.user_name.id_for_label }}">{{ form.user_name.label }}</label>
         {{ form.user_name }}

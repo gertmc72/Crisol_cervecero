@@ -97,42 +97,44 @@ def create_review(request, beer_id=None):
     if request.method == "POST":
         form = ReviewForm(request.POST, request.FILES)
         if form.is_valid():
-            # Determinar la cerveza asociada: preferir beer_id, si no, usar beer_name
-            if beer:
+            # Determinar la cerveza asociada: si el usuario escribió un nombre en el formulario,
+            # usamos esa entrada (buscar o crear), de lo contrario usamos la cerveza del contexto (si existe).
+            beer_name = form.cleaned_data.get("beer_name", "").strip()
+            style = form.cleaned_data.get("style", "").strip()
+            brewery_name = form.cleaned_data.get("brewery_name", "").strip()
+
+            target_beer = None
+            if beer_name:
+                # Buscar cerveza por nombre (insensible mayúsc/minúsc)
+                target_beer = Beer.objects.filter(
+                    name__iexact=beer_name).first()
+                if not target_beer:
+                    # Crear brewery si se proporcionó nombre
+                    brewery = None
+                    if brewery_name:
+                        brewery, _ = Brewery.objects.get_or_create(
+                            name=brewery_name)
+                    else:
+                        # Crear o usar una cervecería 'Desconocida' para permitir la creación
+                        brewery, _ = Brewery.objects.get_or_create(
+                            name="Desconocida")
+
+                    target_beer = Beer.objects.create(
+                        brewery=brewery,
+                        name=beer_name,
+                        style=style or "Desconocido",
+                    )
+
+            # Si no se proporcionó beer_name, y existe beer en la URL, usar esa cerveza
+            if not target_beer and beer:
                 target_beer = beer
-            else:
-                beer_name = form.cleaned_data.get("beer_name", "").strip()
-                style = form.cleaned_data.get("style", "").strip()
-                brewery_name = form.cleaned_data.get(
-                    "brewery_name", "").strip()
-                target_beer = None
-                if beer_name:
-                    # Buscar cerveza por nombre (insensible mayúsc/minúsc)
-                    target_beer = Beer.objects.filter(
-                        name__iexact=beer_name).first()
-                    if not target_beer:
-                        # Crear brewery si se proporcionó nombre
-                        brewery = None
-                        if brewery_name:
-                            brewery, _ = Brewery.objects.get_or_create(
-                                name=brewery_name)
-                        else:
-                            # Crear o usar una cervecería 'Desconocida' para permitir la creación
-                            brewery, _ = Brewery.objects.get_or_create(
-                                name="Desconocida")
 
-                        target_beer = Beer.objects.create(
-                            brewery=brewery,
-                            name=beer_name,
-                            style=style or "Desconocido",
-                        )
-
-            if not (beer or target_beer):
+            if not target_beer:
                 form.add_error(
                     None, "Debes especificar el nombre de la cerveza o acceder desde la página de una cerveza.")
             else:
                 review = Review.objects.create(
-                    beer=target_beer if target_beer else beer,
+                    beer=target_beer,
                     user_name=form.cleaned_data["user_name"],
                     brand=form.cleaned_data.get("brand", ""),
                     brewery_name=form.cleaned_data.get("brewery_name", ""),
@@ -157,8 +159,12 @@ def create_review(request, beer_id=None):
                 messages.success(request, "¡Reseña creada exitosamente!")
                 return redirect("beer_detail", beer_id=(target_beer.id if target_beer else beer.id))
     else:
-        # Pre-rellenar el nombre de usuario con el usuario actual
+        # Pre-rellenar el nombre de usuario con el usuario actual y, si venimos desde una cerveza,
+        # prefill los campos beer_name/style para que el usuario pueda editarlos.
         initial = {"user_name": request.user.username}
+        if beer:
+            initial["beer_name"] = beer.name
+            initial["style"] = beer.style
         form = ReviewForm(initial=initial)
 
     return render(request, "create_review.html", {
@@ -179,8 +185,14 @@ def threads_list_create(request):
     if request.method == "POST" and request.user.is_authenticated:
         form = ThreadForm(request.POST)
         if form.is_valid():
+            beer_name = form.cleaned_data.get("beer_name", "").strip()
+            beer_obj = None
+            if beer_name:
+                beer_obj = Beer.objects.filter(name__iexact=beer_name).first()
+
             thread = Thread.objects.create(
-                beer=form.cleaned_data.get("beer"),
+                beer=beer_obj,
+                beer_name=beer_name,
                 title=form.cleaned_data["title"],
                 user=request.user,
                 user_name=request.user.username,
