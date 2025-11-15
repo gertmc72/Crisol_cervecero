@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Document{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% block extra_head %}{% endblock %}
+    // ...existing code...
+<head>
+  ...existing code...
+  <style>
+    /* Verificación de edad: estilos del overlay */
+    #ageOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    #ageBox {
+      background: #111;
+      padding: 22px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 420px;
+      width: 92%;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    }
+    #ageBox h2 { margin: 0 0 8px; font-size: 1.25rem; }
+    #ageBox p { margin: 0 0 14px; color: #ddd; }
+    #ageBox .age-actions { display:flex; gap:10px; justify-content:center; }
+    #ageBox button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    #ageYes { background: #2ecc71; color: #062; }
+    #ageNo  { background: #e74c3c; color: #fff; }
+    body.age-locked { overflow: hidden; touch-action: none; }
+  </style>
+</head>
+<body>
+  ...existing code...
+
+  <!-- Verificación de edad -->
+  <div id="ageOverlay" role="dialog" aria-modal="true" aria-labelledby="ageTitle" aria-hidden="true">
+    <div id="ageBox">
+      <h2 id="ageTitle">¿Eres mayor de edad?</h2>
+      <p>Esta página contiene contenido relacionado con bebidas alcohólicas. Confirma tu edad para continuar.</p>
+      <div class="age-actions">
+        <button id="ageYes" type="button">Sí, soy mayor</button>
+        <button id="ageNo" type="button">No, salir</button>
+      </div>
+    </div>
+  </div>
+
+  ...existing code...
+
+  <script>
+    (function(){
+      const overlay = document.getElementById('ageOverlay');
+      const yes = document.getElementById('ageYes');
+      const no = document.getElementById('ageNo');
+      const STORAGE_KEY = 'age_verified_v1';
+
+      function show() {
+        if (!overlay) return;
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('age-locked');
+      }
+      function hide() {
+        if (!overlay) return;
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('age-locked');
+      }
+
+      // Mostrar si no está verificado
+      try {
+        const ok = localStorage.getItem(STORAGE_KEY);
+        if (!ok) show();
+      } catch (e) {
+        // si localStorage falla, mostrar siempre
+        show();
+      }
+
+      if (yes) yes.addEventListener('click', function(){
+        try { localStorage.setItem(STORAGE_KEY, '1'); } catch(e){}
+        hide();
+      });
+
+      if (no) no.addEventListener('click', function(){
+        // Redirige fuera del sitio o a página informativa. Cambia la URL si quieres.
+        window.location.href = 'https://www.google.com';
+      });
+
+      // Evitar interacción con foco debajo del overlay
+      document.addEventListener('keydown', function(e){
+        if (overlay && overlay.style.display === 'flex' && e.key === 'Escape') {
+          // opcional: no cerrar con Esc para forzar respuesta
+          e.preventDefault();
+        }
+      }, true);
+    })();
+  </script>
+</body>
+</head>
+
+<body>
+    {% block content %}{% endblock %}
+</body>
+
+</html>
